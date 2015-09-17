@@ -1,26 +1,26 @@
 segment = {}
-function segment.new(parent, position, direction)
+function segment.new(previous, position, direction)
   local self = {}
-  if not parent then
+  if not previous then
     self.position = position
     self.direction = direction
   else
-    parent.child = self
-    self.position = parent.position - parent.direction
-    self.direction = parent.direction
-    self.parent = parent
+    previous.next = self
+    self.position = previous.position - previous.direction
+    self.direction = previous.direction
+    self.previous = previous
   end
 
   function self:changeDirection(direction)
     --alignment correction (irregular dts might cause the segments to be unaligned)
     self.position = getQuadrant(self.position)
 
-    if self.child then
-      self.child:changeDirection(self.direction)
+    if self.next then
+      self.next:changeDirection(self.direction)
     end
 
     --we don't want the head colliding with itself :p
-    if not self.child then
+    if not self.next then
       local lastQuadrant = getQuadrant(self.position - self.direction)
       collisionMatrix.setCollisionPoint(lastQuadrant.x, lastQuadrant.y, 0)
     end
@@ -32,18 +32,18 @@ function segment.new(parent, position, direction)
   end
 
   function self:addSegment()
-    if self.child then self.child:addSegment(); return end
-    self.child = segment.new(self)
+    if self.next then self.next:addSegment(); return end
+    self.next = segment.new(self)
   end
 
   function self:update(ds)
-    if self.child then
-      self.child:update(ds)
+    if self.next then
+      self.next:update(ds)
     end
 
     self.position = self.position + self.direction * ds
 
-    if not self.parent then
+    if not self.previous then
       local quadrant = getQuadrant(self.position)
       collisionResult = collisionMatrix.getCollisionPoint(quadrant.x, quadrant.y)
       return collisionResult

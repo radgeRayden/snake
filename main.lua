@@ -66,10 +66,10 @@ function love.draw()
   love.graphics.rectangle('fill', head.position.x * quadrantSize, head.position.y * quadrantSize, quadrantSize, quadrantSize)
   love.graphics.setColor(255, 255, 255)
   --draw segments
-  local currentSegment = head
-  while currentSegment.child do
-    love.graphics.rectangle('fill', currentSegment.child.position.x * quadrantSize + 0.5, currentSegment.child.position.y * quadrantSize + 0.5, quadrantSize - 2, quadrantSize - 2)
-    currentSegment = currentSegment.child
+  local currentSegment = head.next
+  while currentSegment.next do
+    love.graphics.rectangle('fill', currentSegment.position.x * quadrantSize + 0.5, currentSegment.position.y * quadrantSize + 0.5, quadrantSize - 2, quadrantSize - 2)
+    currentSegment = currentSegment.next
   end
 
   --draw goal
