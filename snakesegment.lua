@@ -4,6 +4,7 @@ function segment.new(previous, position, direction)
   if not previous then
     self.position = position
     self.direction = direction
+    self.rotation = direction
   else
     previous.next = self
     self.position = previous.position - previous.direction
@@ -20,10 +21,7 @@ function segment.new(previous, position, direction)
     end
 
     --we don't want the head colliding with itself :p
-    if not self.next then
-      local lastQuadrant = getQuadrant(self.position - self.direction)
-      collisionMatrix.setCollisionPoint(lastQuadrant.x, lastQuadrant.y, 0)
-    end
+
 
     --avoid turning back on itself
     if self.direction * -1 ~= direction then
@@ -50,6 +48,11 @@ function segment.new(previous, position, direction)
     else
       local quadrant = getQuadrant(self.position)
       collisionMatrix.setCollisionPoint(quadrant.x, quadrant.y, nil)
+    end
+
+    if not self.next then
+      local lastQuadrant = getQuadrant(self.position) -- self.direction)
+      collisionMatrix.setCollisionPoint(lastQuadrant.x, lastQuadrant.y, 0)
     end
   end
 
