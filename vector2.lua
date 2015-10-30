@@ -4,26 +4,37 @@ This is licensed under the MIT license (http://opensource.org/licenses/MIT).
 Time of creation: June 30th, 2015 12:32 GMT
 Description:
 Helper script for handling of Vector2 type objects.
+Version: 1.02 (October 30th, 2015)
 --]]
 
 local vector2 = {}
+
+local function magnitude(self)
+  local x = math.abs (self.x)
+  local y = math.abs(self.y)
+  return math.sqrt(x ^ 2 + y ^ 2)
+end
+
+local function normalize(self)
+  local magnitude = self:magnitude()
+  if magnitude == 0 then return vector2.new(0,0) end
+  return vector2.new(self.x / magnitude, self.y / magnitude)
+end
+
+local function copy(self)
+  return vector2.new(self.x, self.y)
+end
 
 function vector2.new(x, y)
   local self = {}
   setmetatable(self, vector2.meta)
   self.x = x
   self.y = y
-  function self:magnitude()
-    local x = math.abs(self.x)
-    local y = math.abs(self.y)
-    return math.sqrt(x ^ 2 + y ^ 2)
-  end
 
-  function self:normalized()
-    local magnitude = self:magnitude()
-    if magnitude == 0 then return vector2.new(0,0) end
-    return vector2.new(self.x / magnitude, self.y / magnitude)
-  end
+  --instance methods
+  self.magnitude = magnitude
+  self.normalized = normalize
+  self.copy = copy
 
   return self
 end
