@@ -121,7 +121,7 @@ function love.keypressed(key)
     if key == 'return' then
       reset()
     end
-    if key == ' ' then
+    if key == 'space' then
       isPaused = not isPaused
     end
     if key == 'f1' then
